@@ -1,0 +1,12 @@
+australian_user_reviews.json.gz
+australian_users_items.json.gz
+bundle_data.json.gz
+filtered_steam_games.json.gz
+filtered_user_reviews.json.gz
+filtered_users_items.json.gz
+game_features.pkl
+steam_games.json.gz
+steam_reviews.json.gz
+user_features.pkl
+data/training_data.pkl
+# Ignore data files
