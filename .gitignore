@@ -9,4 +9,6 @@ steam_games.json.gz
 steam_reviews.json.gz
 user_features.pkl
 data/training_data.pkl
+test.py
+main_local_backup.ipynb
 # Ignore data files
