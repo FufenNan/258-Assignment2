@@ -1,7 +1,5 @@
 import gzip
 import ast
-import torch
-from torch.utils.data import Dataset, DataLoader
 import numpy as np
 from collections import defaultdict
 import tqdm
@@ -17,14 +15,13 @@ def load_python_dict_gz(file_path, head=None,key=None):
             if not line:
                 continue
             record = ast.literal_eval(line)
-            if key is not None and key not in record:
-                continue
-            import pdb; pdb.set_trace()
-            data.append(record)
+            # if key is not None and key not in record:
+            #     continue
+            # data.append(record)
             count += 1
-            if head is not None and count >= head:
-                break
-
+            # if head is not None and count >= head:
+            #     break
+    print(file_path,count)
     return data
 
 
@@ -34,10 +31,10 @@ def save_python_dict_gz(data, file_path):
             f.write(str(record))  # <-- Python dict 字面量字符串
             f.write("\n")
 
-bundle_path = './bundle_data.json.gz'
-review_path = '../steam_reviews.json.gz'
-item_path = './australian_users_items.json.gz'
-game_path = './steam_games.json.gz'
+bundle_path = '../bundle_data.json.gz'
+review_path = '../australian_user_reviews.json.gz'
+item_path = '../australian_users_items.json.gz'
+game_path = '../steam_games.json.gz'
 
 # bundles = load_python_dict_gz(bundle_path)
 # ['bundle_final_price', 'bundle_url', 'bundle_price', 'bundle_name', 'bundle_id', 'items', 'bundle_discount']

@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.model_selection import train_test_split
-import torch
 import pickle
 
 with open('training_data.pkl', 'rb') as f:
