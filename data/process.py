@@ -96,6 +96,7 @@ for g in games:
 genres_to_idx = {g: i for i, g in enumerate(sorted(all_genres))}
 specs_to_idx = {s: i for i, s in enumerate(sorted(all_specs))}
 tags_to_idx = {t: i for i, t in enumerate(sorted(all_tags))}
+import pdb; pdb.set_trace()
 
 review_per_user = defaultdict(int)
 recommand_per_user = defaultdict(int)
@@ -242,110 +243,3 @@ for i, x in enumerate(training_data[:2]):
         print(f"Cross feature - {k}: {v}")
     print(f"Label: {x['label']}")
     print("-----")
-
-# import torch
-# from torch.utils.data import Dataset, DataLoader
-# import numpy as np
-
-# class SteamDataset(Dataset):
-#     def __init__(self, users, games, reviews=None, max_items=100):
-#         """
-#         users: list of user dicts, each with keys 'user_id', 'items_count', 'items'
-#         games: list of game dicts, each with keys 'id', 'genres', 'specs', 'tags', 'price'
-#         reviews: list of review dicts (optional), each with 'user_id', 'reviews'
-#         """
-#         self.users = users
-#         self.reviews = {r['user_id']: r['reviews'] for r in reviews} if reviews else {}
-#         self.max_items = max_items
-
-#         # 1. 构建 game_id -> game_info 的映射
-#         self.game_dict = defaultdict(dict)
-#         all_genres = set()
-#         all_specs = set()
-#         all_tags = set()
-
-#         for g in games:
-#             if 'id' not in g:
-#                 continue
-#             self.game_dict[g['id']] = g
-#             all_genres.update(g.get('genres', []))
-#             all_specs.update(g.get('specs', []))
-#             all_tags.update(g.get('tags', []))
-
-#         # 2. 生成 one-hot 编码索引
-#         self.genre2idx = {g: i for i, g in enumerate(sorted(all_genres))}
-#         self.spec2idx = {s: i for i, s in enumerate(sorted(all_specs))}
-#         self.tag2idx = {t: i for i, t in enumerate(sorted(all_tags))}
-
-#         self.num_genres = len(self.genre2idx) #12
-#         self.num_specs = len(self.spec2idx) #31
-#         self.num_tags = len(self.tag2idx) #148
-#         import pdb; pdb.set_trace()
-#         # 特征维度
-#         # base 4 + max_items*(price + genres_onehot + specs_onehot + tags_onehot)
-#         self.feature_dim = 4 + max_items * (1 + self.num_genres + self.num_specs + self.num_tags)
-
-#     def encode_game_features(self, game_id):
-#         game = self.game_dict.get(game_id, {})
-#         # price
-#         price = game.get('price', 0.0)
-
-#         # genres one-hot
-#         genres_vec = np.zeros(self.num_genres, dtype=np.float32)
-#         for g in game.get('genres', []):
-#             if g in self.genre2idx:
-#                 genres_vec[self.genre2idx[g]] = 1.0
-
-#         # specs one-hot
-#         specs_vec = np.zeros(self.num_specs, dtype=np.float32)
-#         for s in game.get('specs', []):
-#             if s in self.spec2idx:
-#                 specs_vec[self.spec2idx[s]] = 1.0
-
-#         # tags one-hot
-#         tags_vec = np.zeros(self.num_tags, dtype=np.float32)
-#         for t in game.get('tags', []):
-#             if t in self.tag2idx:
-#                 tags_vec[self.tag2idx[t]] = 1.0
-
-#         return np.concatenate([[price], genres_vec, specs_vec, tags_vec], axis=0)
-
-#     def __len__(self):
-#         return len(self.users)
-
-#     def __getitem__(self, idx):
-#         user = self.users[idx]
-#         user_id = user['user_id']
-
-#         # 基础特征
-#         items_count = user.get('items_count', 0)
-#         total_playtime_forever = sum(item.get('playtime_forever', 0) for item in user.get('items', []))
-#         total_playtime_2weeks = sum(item.get('playtime_2weeks', 0) for item in user.get('items', []))
-#         num_reviews = len(self.reviews.get(user_id, []))
-
-#         base_features = [items_count, total_playtime_forever, total_playtime_2weeks, num_reviews]
-
-#         # 每个 item 特征
-#         item_features = []
-#         items = user.get('items', [])
-#         for i in range(self.max_items):
-#             if i < len(items):
-#                 item_id = items[i]['item_id']
-#                 item_feat = self.encode_game_features(item_id)
-#                 item_features.append(item_feat)
-#             else:
-#                 # pad with zeros
-#                 item_features.append(np.zeros(1 + self.num_genres + self.num_specs + self.num_tags, dtype=np.float32))
-
-#         features = np.concatenate([base_features] + item_features, axis=0)
-#         return user_id, torch.tensor(features, dtype=torch.float32)
-    
-
-# # 使用示例
-# dataset = SteamDataset(user, games=game, reviews=review, max_items=10)
-# dataloader = DataLoader(dataset, batch_size=16, shuffle=True)
-
-# for user_ids, features in dataloader:
-#     print(user_ids)
-#     print(features.shape)
-#     break
